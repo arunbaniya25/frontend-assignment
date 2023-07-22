@@ -1,4 +1,9 @@
 import ProductImage from "@/components/ProductImage";
+import { StarIcon as StarIconOutline } from "@heroicons/react/24/outline";
+import { StarIcon } from "@heroicons/react/24/solid";
+
+import { cartActions } from "@/app/store/slices/cartSlice";
+import { useDispatch } from "react-redux";
 
 type Props = {
   params: {
@@ -12,8 +17,24 @@ async function ProductPage({ params: { id } }: Props) {
     const product: Product = await res.json();
     console.log(product);
 
+    // const dispatch = useDispatch();
+
+    // const addCart = () => {
+    //   dispatch(
+    //     cartActions.addItem({
+    //       id: product.id,
+    //       title: product.title,
+    //       price: product.price,
+    //       description: product.description,
+    //       image: product.image,
+    //     })
+    //   );
+
+    //   console.log("Product added successfully to cart");
+    // };
+
     return (
-      <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8 px-4 mt-48 pb-10">
+      <div className="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-8 px-4 mt-40 pb-10">
         <ProductImage product={product} />
 
         <div className="divide-y">
@@ -23,8 +44,43 @@ async function ProductPage({ params: { id } }: Props) {
               ${product.price}
             </h2>
           </div>
+          <div className="flex items-center text-sm my-4">
+            <p>{product?.rating.rate}</p>
+            {product?.rating.rate && (
+              <div className="flex items-center ml-2 mr-6">
+                {/* Display 5 stars but display the rate ones as StarIconOutline */}
+                {Array.from(
+                  { length: Math.floor(product.rating.rate) },
+                  (_, i) => (
+                    <StarIcon key={i} className="h-4 w-4 text-yellow-500" />
+                  )
+                )}
+
+                {/* Display the rest of the stars as StarIconOutline */}
+                {Array.from(
+                  { length: 5 - Math.floor(product.rating.rate) },
+                  (_, i) => (
+                    <StarIconOutline
+                      key={i}
+                      className="h-4 w-4 text-yellow-500"
+                    />
+                  )
+                )}
+              </div>
+            )}
+            <p className="text-blue-600 hover:underline cursor-pointer text-xs">
+              See all {product?.rating.count} reviews
+            </p>
+          </div>
+
           <div className="pt-8">
-            <p className="text-xs md:text-sm">{product.description}</p>
+            <p className="text-s md:text-sm">{product.description}</p>
+          </div>
+
+          <div className="space-y-3 text-sm">
+            <button className="button w-full mt-5 bg-blue-600 text-white border-transparent hover:border-blue-600 hover:bg-transparent hover:text-black">
+              Add to bag
+            </button>
           </div>
         </div>
       </div>
