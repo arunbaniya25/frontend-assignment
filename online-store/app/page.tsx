@@ -13,8 +13,15 @@ const fetchProducts = async () => {
   return products;
 };
 
+type ProductType = {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+};
+
 export default function Home() {
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<ProductType[]>([]);
 
   useEffect(() => {
     const fetchProductsData = async () => {
@@ -25,7 +32,7 @@ export default function Home() {
     fetchProductsData();
   }, []);
 
-  // Extract carousel images, names, and descriptions from products
+  // Extract carousel data only when the 'products' array is not empty
   const carouselData = products.slice(0, 3).map((product) => ({
     image: product.image,
     name: product.title,
